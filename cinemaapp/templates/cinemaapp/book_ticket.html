@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Бронирование билета</title>
+</head>
+<body>
+    <h1>Бронирование билета на {{ session.movie.title }} ({{ session.date }} {{ session.time }})</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Забронировать</button>
+    </form>
+    <a href="{% url 'session_list' %}">Назад к расписанию</a>
+</body>
+</html>

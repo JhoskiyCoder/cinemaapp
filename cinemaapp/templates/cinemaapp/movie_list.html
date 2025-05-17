@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Список фильмов</title>
+</head>
+<body>
+    <h1>Список фильмов</h1>
+    <ul>
+        {% for movie in movies %}
+            <li>
+                <a href="{% url 'movie_detail' movie.id %}">
+                    {{ movie.title }} ({{ movie.genre }})
+                </a>
+            </li>
+        {% empty %}
+            <li>Фильмы не найдены.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Расписание сеансов</title>
+</head>
+<body>
+    <h1>📅 Расписание сеансов</h1>
+    <ul>
+        {% for session in sessions %}
+            <li>
+                🎬 <strong>{{ session.movie.title }}</strong> <br>
+                📅 {{ session.date }} 🕒 {{ session.time }} <br>
+                🏛 Зал: {{ session.hall }}
+            </li>
+            <hr>
+        {% empty %}
+            <li>Сеансов пока нет.</li>
+        {% endfor %}
+    </ul>
+    <ul>
+  {% for session in sessions %}
+    <li>
+      {{ session.movie.title }} - {{ session.date }} {{ session.time }} - Зал: {{ session.hall }}
+      - <a href="{% url 'book_ticket' session.id %}">Забронировать</a>
+    </li>
+  {% empty %}
+    <li>Сеансов нет</li>
+  {% endfor %}
+</ul>
+
+    <p><a href="/">← Назад к фильмам</a></p>
+</body>
+</html>

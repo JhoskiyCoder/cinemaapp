@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ movie.title }}</title>
+</head>
+<body>
+    <h1>{{ movie.title }}</h1>
+    <p>{{ movie.description }}</p>
+    <p>Возрастное ограничение: {{ movie.age_limit }}+</p>
+    <p>Жанр: {{ movie.genre }}</p>
+    <h2>Сеансы</h2>
+    <ul>
+        {% for session in sessions %}
+            <li>{{ session.date }} в {{ session.time }} (зал {{ session.hall }})</li>
+        {% empty %}
+            <li>Нет доступных сеансов</li>
+        {% endfor %}
+    </ul>
+
+    <a href="/">← Назад ко всем фильмам</a>
+</body>
+</html>
