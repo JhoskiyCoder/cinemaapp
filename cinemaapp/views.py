@@ -4,7 +4,25 @@ from .forms import BookingForm
 from django.core.mail import send_mail
 def movie_list(request):
     movies = Movie.objects.all()
-    return render(request, 'cinemaapp/movie_list.html', {'movies': movies})
+
+    query = request.GET.get('q')
+    genre = request.GET.get('genre')
+
+    if query:
+        movies = movies.filter(title__icontains=query)
+
+    if genre:
+        movies = movies.filter(genre=genre)
+
+    # Получим список уникальных жанров для формы
+    genres = Movie.objects.values_list('genre', flat=True).distinct()
+
+    return render(request, 'cinemaapp/movie_list.html', {
+        'movies': movies,
+        'genres': genres,
+        'selected_genre': genre,
+        'search_query': query,
+    })
 
 def movie_detail(request, movie_id):
     movie = get_object_or_404(Movie, id=movie_id)

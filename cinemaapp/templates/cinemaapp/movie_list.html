@@ -1,21 +1,41 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Список фильмов</title>
-</head>
-<body>
-    <h1>Список фильмов</h1>
-    <ul>
-        {% for movie in movies %}
-            <li>
-                <a href="{% url 'movie_detail' movie.id %}">
-                    {{ movie.title }} ({{ movie.genre }})
-                </a>
-            </li>
-        {% empty %}
-            <li>Фильмы не найдены.</li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+{% extends 'cinemaapp/base.html' %}
 
+{% block title %}Фильмы{% endblock %}
+
+{% block content %}
+<form method="get" class="row g-2 mb-4">
+    <div class="col-md-4">
+        <input type="text" name="q" class="form-control" placeholder="Поиск по названию" value="{{ search_query }}">
+    </div>
+    <div class="col-md-4">
+        <select name="genre" class="form-select">
+            <option value="">Все жанры</option>
+            {% for g in genres %}
+                <option value="{{ g }}" {% if g == selected_genre %}selected{% endif %}>{{ g }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-primary w-100">Найти</button>
+    </div>
+</form>
+
+<div class="row">
+    {% for movie in movies %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                {% if movie.poster %}
+                    <img src="{{ movie.poster.url }}" class="card-img-top img-fluid poster-img" alt="{{ movie.title }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ movie.title }}</h5>
+                    <p class="card-text">{{ movie.genre }}</p>
+                    <a href="{% url 'movie_detail' movie.id %}" class="btn btn-outline-primary">Подробнее</a>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p>Фильмы не найдены.</p>
+    {% endfor %}
+</div>
+{% endblock %}

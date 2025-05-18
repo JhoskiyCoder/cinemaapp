@@ -1,23 +1,36 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{ movie.title }}</title>
-</head>
-<body>
-    <h1>{{ movie.title }}</h1>
-    <p>{{ movie.description }}</p>
-    <p>Возрастное ограничение: {{ movie.age_limit }}+</p>
-    <p>Жанр: {{ movie.genre }}</p>
-    <h2>Сеансы</h2>
-    <ul>
+{% extends 'cinemaapp/base.html' %}
+
+{% block title %}{{ movie.title }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        {% if movie.poster %}
+            <img src="{{ movie.poster.url }}" class="img-fluid rounded mb-3" alt="{{ movie.title }}">
+        {% endif %}
+    </div>
+    <div class="col-md-8">
+        <h2>{{ movie.title }}</h2>
+        <p><strong>Жанр:</strong> {{ movie.genre }}</p>
+        <p><strong>Продолжительность:</strong> {{ movie.duration }} мин</p>
+        <p><strong>Возрастное ограничение:</strong> {{ movie.age_limit }}+</p>
+        <p><strong>Описание:</strong><br>{{ movie.description }}</p>
+    </div>
+</div>
+
+<hr>
+
+<h4>Сеансы:</h4>
+{% if sessions %}
+    <ul class="list-group">
         {% for session in sessions %}
-            <li>{{ session.date }} в {{ session.time }} (зал {{ session.hall }})</li>
-        {% empty %}
-            <li>Нет доступных сеансов</li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ session.date }} {{ session.time }} ({{ session.hall }})
+                <a href="{% url 'book_ticket' session.id %}" class="btn btn-sm btn-success">Забронировать</a>
+            </li>
         {% endfor %}
     </ul>
-<a href="{% url 'movie_sessions' movie.id %}">Посмотреть расписание сеансов</a>
-
-    <a href="/">← Назад ко всем фильмам</a>
-</body>
-</html>
+{% else %}
+    <p>Нет доступных сеансов.</p>
+{% endif %}
+{% endblock %}

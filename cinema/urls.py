@@ -1,9 +1,12 @@
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('cinemaapp.urls')),  # ← подключили маршруты приложения
-    path('', include('cinemaapp.urls')),  # подключаем urls из нашего приложения
+    path('', include('cinemaapp.urls')),  # ← только один раз
 ]
 
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

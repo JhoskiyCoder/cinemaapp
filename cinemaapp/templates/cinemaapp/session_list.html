@@ -1,33 +1,23 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Расписание сеансов</title>
-</head>
-<body>
-    <h1>📅 Расписание сеансов</h1>
-    <ul>
+{% extends 'cinemaapp/base.html' %}
+
+{% block title %}Расписание сеансов{% endblock %}
+
+{% block content %}
+<h2>Расписание сеансов</h2>
+
+{% if sessions %}
+    <ul class="list-group">
         {% for session in sessions %}
-            <li>
-                🎬 <strong>{{ session.movie.title }}</strong> <br>
-                📅 {{ session.date }} 🕒 {{ session.time }} <br>
-                🏛 Зал: {{ session.hall }}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>{{ session.movie.title }}</strong><br>
+                    {{ session.date }} {{ session.time }} — {{ session.hall }}
+                </div>
+                <a href="{% url 'book_ticket' session.id %}" class="btn btn-outline-primary">Забронировать</a>
             </li>
-            <hr>
-        {% empty %}
-            <li>Сеансов пока нет.</li>
         {% endfor %}
     </ul>
-    <ul>
-  {% for session in sessions %}
-    <li>
-      {{ session.movie.title }} - {{ session.date }} {{ session.time }} - Зал: {{ session.hall }}
-      - <a href="{% url 'book_ticket' session.id %}">Забронировать</a>
-    </li>
-  {% empty %}
-    <li>Сеансов нет</li>
-  {% endfor %}
-</ul>
-
-    <p><a href="/">← Назад к фильмам</a></p>
-</body>
-</html>
+{% else %}
+    <p>Сеансов пока нет.</p>
+{% endif %}
+{% endblock %}

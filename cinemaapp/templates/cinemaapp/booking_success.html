@@ -1,10 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Бронирование успешно</title>
-</head>
-<body>
-    <h1>Спасибо! Ваш билет забронирован.</h1>
-    <a href="{% url 'session_list' %}">Вернуться к расписанию</a>
-</body>
-</html>
+{% extends 'cinemaapp/base.html' %}
+
+{% block title %}Бронирование успешно{% endblock %}
+
+{% block content %}
+<div class="alert alert-success text-center">
+    <h4 class="alert-heading">✅ Успешно!</h4>
+    <p>Ваш билет забронирован. Подтверждение отправлено на вашу почту.</p>
+    <hr>
+    <a href="{% url 'movie_list' %}" class="btn btn-primary mt-2">Вернуться на главную</a>
+</div>
+{% endblock %}
