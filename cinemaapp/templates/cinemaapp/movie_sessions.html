@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <h1>Сеансы фильма "{{ movie.title }}"</h1>
+
+<ul>
+    {% for session in sessions %}
+        <li>
+            {{ session.date }} {{ session.time }} — Зал {{ session.hall }}
+            — <a href="{% url 'book_ticket' session.id %}">Забронировать</a>
+        </li>
+    {% empty %}
+        <li>Сеансов пока нет.</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'movie_detail' movie.id %}">← Назад к описанию фильма</a>
+</head>
+<body>
+
+</body>
+</html>

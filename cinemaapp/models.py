@@ -6,6 +6,7 @@ class Movie(models.Model):
     duration = models.PositiveIntegerField(help_text="Duration in minutes")
     age_limit = models.PositiveIntegerField()
     description = models.TextField(blank=True)
+    poster = models.ImageField(upload_to='posters/', blank=True, null=True)  # Добавлено поле афиши
 
     def __str__(self):
         return self.title
