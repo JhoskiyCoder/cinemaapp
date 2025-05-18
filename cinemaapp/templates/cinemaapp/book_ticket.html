@@ -2,14 +2,71 @@
 <html>
 <head>
     <title>Бронирование билета</title>
+    <style>
+        .seat {
+            width: 40px;
+            height: 40px;
+            margin: 5px;
+            display: inline-block;
+            text-align: center;
+            line-height: 40px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            background-color: #eee;
+        }
+        .taken {
+            background-color: #ffc107; /* жёлтый — занято */
+            cursor: not-allowed;
+        }
+        .selected {
+            background-color: #28a745; /* зелёный — выбран */
+        }
+    </style>
 </head>
 <body>
-    <h1>Бронирование билета на {{ session.movie.title }} ({{ session.date }} {{ session.time }})</h1>
+    <h1>Бронирование билета на {{ session.movie.title }}</h1>
+    <p>{{ session.date }} {{ session.time }} | Зал: {{ session.hall }}</p>
+
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        <p>{{ form.name.label }}: {{ form.name }}</p>
+        <p>{{ form.phone.label }}: {{ form.phone }}</p>
+        <p>{{ form.email.label }}: {{ form.email }}</p>
+        {{ form.seat_number }} <!-- скрытое поле -->
+
+        <h3>Выберите место:</h3>
+        <div id="seat-map">
+            {% for row in "ABCDE" %}
+                <div>
+                    {% for col in "12345678" %}
+                        {% with seat=row|add:col %}
+                            <div class="seat {% if seat in taken_seats %}taken{% endif %}" data-seat="{{ seat }}">{{ seat }}</div>
+                        {% endwith %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <p>Вы выбрали: <span id="selected-seat">-</span></p>
+
         <button type="submit">Забронировать</button>
     </form>
-    <a href="{% url 'session_list' %}">Назад к расписанию</a>
+
+    <a href="{% url 'session_list' %}">← Назад</a>
+
+    <script>
+        const seats = document.querySelectorAll('.seat:not(.taken)');
+        const seatInput = document.querySelector('input[name="seat_number"]');
+        const selectedDisplay = document.getElementById('selected-seat');
+
+        seats.forEach(seat => {
+            seat.addEventListener('click', () => {
+                seats.forEach(s => s.classList.remove('selected'));
+                seat.classList.add('selected');
+                seatInput.value = seat.dataset.seat;
+                selectedDisplay.textContent = seat.dataset.seat;
+            });
+        });
+    </script>
 </body>
 </html>

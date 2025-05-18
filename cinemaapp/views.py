@@ -17,23 +17,22 @@ def session_list(request):
 
 def book_ticket(request, session_id):
     session = get_object_or_404(Session, id=session_id)
+    taken_seats = Ticket.objects.filter(session=session).values_list('seat_number', flat=True)
+
     if request.method == 'POST':
         form = BookingForm(request.POST)
         if form.is_valid():
-            # Сохраняем данные зрителя
             viewer, created = Viewer.objects.get_or_create(
                 name=form.cleaned_data['name'],
                 phone=form.cleaned_data['phone'],
                 email=form.cleaned_data['email']
             )
-            # Создаем билет
             Ticket.objects.create(
                 viewer=viewer,
                 session=session,
                 seat_number=form.cleaned_data['seat_number']
             )
 
-            # 📬 Отправляем письмо
             subject = 'Подтверждение бронирования'
             message = f"""
             Здравствуйте, {viewer.name}!
@@ -46,12 +45,16 @@ def book_ticket(request, session_id):
 
             Спасибо за бронирование!
             """
-            send_mail(subject, message, None, [viewer.email])  # Email уходит на почту зрителя
-
+            send_mail(subject, message, None, [viewer.email])
             return redirect('booking_success')
     else:
         form = BookingForm()
-    return render(request, 'cinemaapp/book_ticket.html', {'form': form, 'session': session})
+
+    return render(request, 'cinemaapp/book_ticket.html', {
+        'form': form,
+        'session': session,
+        'taken_seats': list(taken_seats)
+    })
 
 def booking_success(request):
     return render(request, 'cinemaapp/booking_success.html')
